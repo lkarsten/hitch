@@ -2374,6 +2374,13 @@ handle_accept(struct ev_loop *loop, ev_io *w, int revents)
 	}
 #endif
 
+#ifdef TCP_FASTOPEN
+	int optval = 5;
+	if (setsockopt(client, SOL_TCP, TCP_FASTOPEN, &optval, sizeof(optval)) < 0) {
+			SOCKERR("Couldn't setsockopt on client (TCP_FASTOPEN)");
+	}
+#endif
+
 #if HAVE_ACCEPT4==0
 	if (setnonblocking(client) < 0) {
 		SOCKERR("{client} setnonblocking failed");
